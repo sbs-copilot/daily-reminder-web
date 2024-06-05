@@ -22,6 +22,7 @@ axios.interceptors.request.use(
       config.headers.token = userInfo.value.token
     }
     // config.headers["Access-Control-Allow-Origin"] = "*"
+    config.headers['ngrok-skip-browser-warning'] = '69420'
     // 添加 timestamp 参数
     let signData = {}
     if (config.method === 'get') {
@@ -75,14 +76,6 @@ axios.interceptors.response.use(
       }, 4000)
       return Promise.reject(response.data.message)
     } else if (response.data.code != 200) {
-      const requestUrl: string = response.config.url || ''
-      // 核销失败的api手动处理报错
-      if (!requestUrl.includes('/mine/ticket/code')) {
-        uni.showToast({
-          title: response.data.message,
-          icon: 'none'
-        })
-      }
       return Promise.reject(response.data.message)
     }
 

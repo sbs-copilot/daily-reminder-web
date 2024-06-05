@@ -1,9 +1,26 @@
 <template>
   <div ref="container" class="h-[100vh] w-[100vw] overflow-y-scroll bg-blue-50">
-    <!-- A. 顶图 -->
-    <!-- <h2 class="w-full py-4 text-center text-gray-600">👻日报小助手</h2> -->
-    <div class="h-5"></div>
+    <!-- A. 顶部 -->
+    <view
+      class="fixed left-0 top-0 z-10 flex w-[100vw] flex-col bg-blue-100/90">
+      <h3 class="mt-2 w-full text-center text-white">👻日报小助手</h3>
+      <div class="flex w-full py-3 text-[var(--u-primary)]">
+        <u-button class="mx-2" color="#cae1ff" @click="getTasks">
+          <span class="font-bold text-[var(--u-primary)]">从禅道读取任务</span>
+        </u-button>
+        <u-button class="mx-2" color="#cae1ff" @click="addTask">
+          <span class="font-bold text-[var(--u-primary)]">手动添加任务</span>
+        </u-button>
+      </div>
+    </view>
+    <div class="h-28"></div>
     <!-- B. 任务列表 -->
+    <u-empty
+      v-if="!tasks?.length"
+      mode="list"
+      iconSize="100"
+      textSize="30"
+      marginTop="400" />
     <div class="mx-6 mb-3" v-for="(task, index) in tasks" :key="index">
       <div
         class="relative flex h-auto rounded-md bg-white px-2 pb-2 pt-8 shadow-lg">
@@ -55,20 +72,12 @@
         </div>
       </div>
     </div>
-    <div class="mx-6 mt-6 flex text-[var(--u-primary)]">
-      <u-button type="primary" class="mx-2" @click="getTasks" plain>
-        从禅道读取任务
-      </u-button>
-      <u-button type="primary" class="mx-2" @click="addTask" plain>
-        手动新增任务
-      </u-button>
-    </div>
-    <div class="h-40"></div>
+    <div class="h-56"></div>
     <!-- C. 任务列表 -->
     <div
-      class="fixed bottom-0 z-[999] flex w-full items-center justify-center rounded-t-md bg-white py-3"
+      class="fixed bottom-0 z-[999] flex w-full items-center justify-center bg-blue-100/90 pt-3"
       style="padding-bottom: calc(env(safe-area-inset-bottom) + 12px)">
-      <u-button class="mx-6" type="warning" @click="copy">
+      <u-button class="mx-6" type="primary" @click="copy">
         复制到剪贴板
       </u-button>
       <u-button v-if="false" class="mx-2" type="error" @click="sendEmail">
@@ -204,6 +213,13 @@ const getTasks = async () => {
 }
 
 const copy = () => {
+  if (!tasks?.length) {
+    uni.showToast({
+      title: '请先添加当日任务',
+      icon: 'none'
+    })
+    return
+  }
   copyText(message.value)
   showPopup.value = true
 }
