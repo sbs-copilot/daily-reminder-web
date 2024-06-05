@@ -156,7 +156,6 @@ const scrollToBottom = () => {
 }
 
 const onLinechange = (event: any, index: number) => {
-  // console.log(event.detail)
   // event.detail = {height: 0, heightRpx: 0, lineCount: 0}
   tasks[index].lineCount = event.detail.lineCount
 }
