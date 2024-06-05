@@ -3,7 +3,11 @@
     <!-- A. 顶部 -->
     <view
       class="fixed left-0 top-0 z-10 flex w-[100vw] flex-col bg-blue-100/90">
-      <h3 class="mt-2 w-full text-center text-white">👻日报小助手</h3>
+      <div v-if="false" class="mt-2 w-full text-center text-white">
+        <span class="text-lg font-medium text-blue-400">
+          您可以通过如下两种方式添加任务
+        </span>
+      </div>
       <div class="flex w-full py-3 text-[var(--u-primary)]">
         <u-button class="mx-2" color="#cae1ff" @click="getTasks">
           <span class="font-bold text-[var(--u-primary)]">从禅道读取任务</span>
@@ -13,7 +17,7 @@
         </u-button>
       </div>
     </view>
-    <div class="h-28"></div>
+    <div class="h-20"></div>
     <!-- B. 任务列表 -->
     <u-empty
       v-if="!tasks?.length"
@@ -175,19 +179,28 @@ const addTask = () => {
 }
 
 const getTasks = async () => {
+  // 1. 从路由参数中获取日期和禅道项目id
+  const params = {
+    date: route.value.query?.date,
+    chandao: route.value.query?.chandao
+  }
+  if (!params?.date || !params?.chandao) {
+    uni.showToast({
+      title: '请从消息通知进入页面',
+      icon: 'none'
+    })
+    return
+  }
+  tasks.splice(0, tasks.length)
+
   uni.showLoading({
     title: '从禅道读取中'
   })
   // 清空数据
-  tasks.splice(0, tasks.length)
-
   let list: NetWorkType.TaskItem[] = []
   try {
     const { data } = await taskApi.query<NetWorkType.TaskItem[]>({
-      data: {
-        date: route.value.query?.date,
-        chandao: route.value.query?.chandao
-      }
+      data: params
     })
     list = data
   } catch (error) {

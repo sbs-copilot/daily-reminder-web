@@ -82,9 +82,11 @@ axios.interceptors.response.use(
     return response
   },
   function (error) {
-    if (error.name && error.name == 'AxiosError') {
+    console.log('11111111111111111', error)
+    if (error.name && error.name === 'AxiosError') {
+      const tip = error.response?.data?.message || '服务暂不可用'
       uni.showToast({
-        title: '服务暂不可用',
+        title: tip,
         icon: 'none'
       })
     } else {
